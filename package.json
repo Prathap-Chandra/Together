@@ -1,0 +1,28 @@
+{
+  "name": "together",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Prathap-Chandra/together.git"
+  },
+  "keywords": [],
+  "author": "Prathap Chandra <prathap.chandra.754@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Prathap-Chandra/together/issues"
+  },
+  "homepage": "https://github.com/Prathap-Chandra/together#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "mongoose": "^5.9.10"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
