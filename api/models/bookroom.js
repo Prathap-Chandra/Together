@@ -1,27 +1,17 @@
 const mongoose = require('mongoose');
 
 const bookRoom = mongoose.Schema({
-    _id: {
+    roomId: {
         type: String,
         required: true,
         max: 24,
         min: 24
     },
     dateToBook: {
-        type: Date,
+        type: String,
         required: true
     },
-    reservations: [{
-        slotNumber: {
-            type: Array,
-            required: true
-        },
-        userName: {
-            type: String,
-            required: true
-        }
-    }]
-
+    reservations: Array
 });
 
 module.exports = mongoose.model('BookRoom', bookRoom);

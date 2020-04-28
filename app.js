@@ -1,28 +1,38 @@
 const express = require('express')
 const app = express();
 const mongoose = require("mongoose");
+const config = require("./config/config")
 
 const addRoom = require("./api/routes/addRoom");
 const bookRoom = require("./api/routes/bookRoom");
 
-// mongoose.connect('mongodb://localhost:27017/myapp',{
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     serverSelectionTimeoutMS: 5000
-// },(err,data) => {
-//     if(err) throw new Error(err);
-//     console.log("connected Successfully");
-// });
-mongoose.connect('mongodb://localhost:27017/myapp',{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000
-}).then((res) => {console.log("res")})
-.catch((err)=>{console.log(err)});
+// Connect to MongoDB
+mongoose
+  .connect(config.mongoURI, config.mongoOpts)
+  .then(() => {
+    console.log("MongoDB Connected");
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
 mongoose.Promise = global.Promise;
 
 app.use(express.json());
+
+// Handle CORS Errors if any
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    if (req.method === "OPTIONS") {
+        res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+        return res.status(200).json({});
+    }
+    next();
+});
 
 app.get("/", (req,res) => {
     res.status(200).json({
@@ -30,7 +40,23 @@ app.get("/", (req,res) => {
     })
 })
 
+// Routes to be handled
 app.use("/v1.0/rooms/add",addRoom);
 app.use("/v1.0/rooms/book",bookRoom);
+
+app.use((req, res, next) => {
+    const error = new Error("The requested URL is not found");
+    error.status = 404;
+    next(error);
+});
+
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    });
+});
 
 module.exports = app;
