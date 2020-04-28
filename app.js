@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express();
 const mongoose = require("mongoose");
+const helmet = require('helmet');
 const config = require("./config/config")
 
 const addRoom = require("./api/routes/addRoom");
@@ -17,6 +18,8 @@ mongoose
   });
 
 mongoose.Promise = global.Promise;
+
+app.use(helmet());
 
 app.use(express.json());
 

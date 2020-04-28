@@ -29,4 +29,22 @@ router.post("/", async (req,res) => {
     }
 })
 
+// get the list of all rooms
+router.get("/", async (req,res) => {
+
+    try {
+        const result = await NewRoom.find();
+        res.status(201).json({
+            success: "true",
+            meeting_rooms: result
+        });   
+    } catch (error) {
+        res.status(500).json({
+            success: "false",
+            message:"Couldn't fetch the meeting rooms list",
+            reason: error
+        });  
+    }
+})
+
 module.exports = router;
