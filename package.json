@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/Prathap-Chandra/together/issues"
   },
-  "homepage": "https://github.com/Prathap-Chandra/together#readme"
+  "homepage": "https://github.com/Prathap-Chandra/together#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.10"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
 }
