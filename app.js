@@ -17,7 +17,6 @@ mongoose
     console.log(err);
   });
 
-mongoose.Promise = global.Promise;
 
 app.use(helmet());
 
@@ -37,6 +36,7 @@ app.use((req, res, next) => {
     next();
 });
 
+// basic route for testing
 app.get("/", (req,res) => {
     res.status(200).json({
         message: "home page"

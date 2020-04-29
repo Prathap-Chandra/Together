@@ -1,8 +1,7 @@
 const http = require('http');
 const app = require('./app');
-
-const port = process.env.PORT || 3000;
+const config = require("./config/config")
 
 const server = http.createServer(app);
 
-server.listen(port);
+server.listen(config.PORT);

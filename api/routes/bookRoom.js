@@ -1,35 +1,47 @@
 const express = require('express')
 const router = express.Router();
 const mongoose = require("mongoose");
+const validateRequest = require("../../helpers/validateRequest");
 
 const BookRoom = require("../models/bookroom");
 const NewRoom = require("../models/newroom");
 
 router.post("/", async (req,res) => {
 
-    const {roomId, dateToBook, slotsRequired, userName} = req.body;
- 
-    if(!slotsRequired || !roomId || (roomId && roomId.length !== 24) || !userName){
-        res.status(400).json({
+    let notAValidRequest = validateRequest(req.body);
+    if(notAValidRequest){
+        return res.status(400).json({
             success: false,
-            message: "Please make a valid request."
+            reason: notAValidRequest
         })
     }
     
+    const {roomId, dateToBook, slotsRequired, userName} = req.body;
+    
     try {
         const [ roomDetails ]  = await NewRoom.find({ _id: roomId }, {numberOfSeats: 1});
+        
+        // if the roomId is not correct then throw an error
+        if(!roomDetails){
+            return res.status(400).json({
+                success: false,
+                message: `Looks like the roomId is not valid. please make sure you enter valid details.`
+            })
+        }
+
         const numberOfSeats = roomDetails.numberOfSeats;
         const slots = [...new Set(slotsRequired)];
 
         /* check if the no.of slots that user has requested are greater than 
          the seating capacity of the room. if yes then notify the user */
 
-        if(slots.length  >= numberOfSeats){
+        if(slots.length  > numberOfSeats){
             res.status(400).json({
                 success: false,
                 message: `The meeting room you want to block has a maximum seating capacity of ${numberOfSeats}.`
             })
-        }else if(slots.length  <= numberOfSeats){
+        }else {
+            
             /*
             if no records found with the query then block the room for that particular day
             if there are any duplicate seat numbers like [1,2,3,3,2] get the unie numbers block those many
@@ -54,85 +66,59 @@ router.post("/", async (req,res) => {
                     roomId, dateToBook, reservations  
                 },{ collection: "bookrooms" });
 
-                let blockedRoom = await bookroom.save()
+                let blockedRoom = await bookroom.save();
                 res.status(200).json({
                     success: true,
                     message: `Blocked the meeting room for ${dateToBook} :-)`,
                     more_details: blockedRoom
                 })
 
-            }else if(result){
+            }else if(result && result.reservations){
                 
                 try {
                     slots.forEach((slotNumber) => {
-                        // console.log(result.reservations,"result.reservations")
                         if(!result.reservations.some(li => li.slotNumber === slotNumber)){
-                            console.log("true")
-                            reservations.push({ slotNumber, userName })
+                            reservations.push({ slotNumber, userName });
                         }
                     })
     
                     if(reservations && reservations.length > 0){
-    
-                        reservations = reservations.concat(result.reservations);
                         
-                        const bookroom = new BookRoom({
-                            _id: new mongoose.Types.ObjectId(), 
-                            roomId, dateToBook, reservations  
-                        },{ collection: "bookrooms" });
-
-                        console.log(bookroom,"bookroom");
+                        // get previous slots and update the whole reservations field of that record
+                        reservations = reservations.concat(result.reservations);
         
                         try {
-                            const updates  = await BookRoom.findOneAndUpdate(filter,  
+                            const updatedData  = await BookRoom.findOneAndUpdate(filter,  
                                 {$set: {reservations} },
                                 {useFindAndModify: true, new: true, upsert: true });
-                            res.status(200).json({
+                            return res.status(201).json({
                                 success: true,
-                                message: `checking Updated checking`,
-                                more_details: updates
+                                message: `Booked few other seats in the meeting room.`,
+                                more_details: updatedData
                             })
                         } catch (error) {
-                            return res.status(200).json({
+                            return res.status(500).json({
                                 success: true,
-                                message: `wait Updated checking`,
+                                message: `Looks like something went worng. Please try again after some time`,
                                 more_details: error
                             })
                         }
-                        
-                        // res.status(200).json({
-                        //     success: true,
-                        //     message: `Updated checking`,
-                        //     more_details: updates
-                        // })
                     }else{
-                        res.status(400).json({
+                        return res.status(400).json({
                             success: true,
-                            message: `Looks like the seats are already reserved. please try with different seat number`
+                            message: `Looks like the seats are already reserved.`
                         })
                     }
-                } catch (error) {
-                    console.log(error,"error")
-                    res.status(400).json({
-                        message: error
-                    })
-                }
-                
 
-                /* 
-                multiple cases to check here
-                    1. seats should not exceed the max seating capacity of the Room
-                    2. check if already few seats are blocked and if you want to add new seats, 
-                        which again exceeds the max seating capacity of the Room. throw and error
-                    3. if a seat is blocked, and is requesed to block that particular seat only
-                        then respond with 400 bad request with proper error message
-                    4. if a seat is blocked, and is requesed to block that seat again 
-                    (there are other seats to block as well) 
-                    then add those new seats and ignore the already blocked ones
-                */
+                } catch (error) {
+                    res.status(500).json({
+                        message: "Something went wrong please try again after some time"
+                    });
+                }
+
             }else{
                 res.status(500).json({
-                    message: "update this error message"
+                    message: "Something went wrong please try again after some time"
                 });    
             } 
         }

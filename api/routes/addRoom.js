@@ -4,10 +4,21 @@ const mongoose = require("mongoose");
 
 const NewRoom = require("../models/newroom");
 
+// Add a new room
 router.post("/", async (req,res) => {
 
     const {name, numberOfSeats, floorNumber, whiteboard, roomPic, conference_cost_in_credits} = req.body;
-
+    
+    // Multiple Meeting rooms with same name are not allowed 
+    const result = await NewRoom.findOne({name});
+    if(result && result.name){
+        return res.status(200).json({
+            success: false,
+            message: "Looks like there exists a room with the same name. Please try with a different name.",
+            more_details: result 
+        })
+    }
+    
     const newroom = new NewRoom({
         "_id": new mongoose.Types.ObjectId(),
         name, numberOfSeats, floorNumber, whiteboard, roomPic, conference_cost_in_credits
@@ -29,12 +40,12 @@ router.post("/", async (req,res) => {
     }
 })
 
-// get the list of all rooms
+// get the list of all meeting rooms
 router.get("/", async (req,res) => {
 
     try {
         const result = await NewRoom.find();
-        res.status(201).json({
+        res.status(200).json({
             success: "true",
             meeting_rooms: result
         });   
