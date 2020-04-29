@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "68222d86-96c4-427a-bc1d-3c365ce5a39d",
+		"name": "together",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "addRooms",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n   \"name\": \"Omega\",\n   \"numberOfSeats\": 5,\n   \"floorNumber\": \"Ground Floor\",\n   \"whiteboard\": true,\n   \"roomPic\": \"https://s3.ap-south1.amazonaws.com/2gethrteam/building/5c41bcd803a72132b4fe08e3/objects/image-5f7ad3eb-a7df-4bbf-9680-cbdc9febdf99.jpg\",\n   \"conference__cost_in_credits\": 2\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1.0/rooms/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1.0",
+						"rooms",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bookRooms",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"roomId\": \"5c5a979f9a3d9301fc688672\",\n  \"dateToBook\": \"25-07-2019\",\n  \"slotsRequired\": [ 3, 4 ],\n  \"userName\": \"Aditi\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1.0/rooms/book",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1.0",
+						"rooms",
+						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "listRooms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/v1.0/rooms/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1.0",
+						"rooms",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bookedRooms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/v1.0/rooms/book",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1.0",
+						"rooms",
+						"book"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
