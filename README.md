@@ -13,8 +13,8 @@ npm start
 ```
 
 ## Usage
-- [Postman Collection](https://www.google.com)
-- [A Simple 4 mins video explaining the APIs flow](https://www.google.com)
+- [Postman Collection](https://github.com/Prathap-Chandra/together/tree/master/postman_collection)
+- [A Simple 4 mins video explaining the APIs flow](https://drive.google.com/file/d/1mYJ83GOwRQc9-J_a5Vkk98B79rvHIVVV/view)
 
 ## APIs
 - Get the list of Existing Meeting Rooms
