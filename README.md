@@ -9,6 +9,7 @@ Steps to run the app
 ```
 git clone https://github.com/Prathap-Chandra/together.git
 cd together/
+npm install
 npm start
 ```
 
