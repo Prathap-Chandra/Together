@@ -1,5 +1,5 @@
 module.exports = {
-    mongoURI: 'mongodb://prathap_chandra:password123@ds145275.mlab.com:45275/prathap_chandra',
+    mongoURI: '', /* Use mLab connection String */
     mongoOpts: {
         useNewUrlParser: true,
         useUnifiedTopology: true
