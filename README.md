@@ -24,7 +24,7 @@ curl --location --request GET 'http://localhost:3000/v1.0/rooms/add'
 ```
 
 - Create a new Meeting Room
-- Please make sure that name should be unique
+- Please make sure that room name is unique
 - You can use the above API to get the existing meeting rooms and their names so that there will be no conflict
 ```
 curl --request POST 'http://localhost:3000/v1.0/rooms/add' \
